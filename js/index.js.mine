@@ -131,6 +131,7 @@ displayImage.onload = function() {
   rangeY = Math.max(0, displayDefaultHeight - containerHeight);
 }
 
+/*
 imageContainer.addEventListener('wheel', e => {
   displayImageScale = displayImageCurrentScale = clampScale(displayImageScale + (e.wheelDelta / 800));
   updateRange();
@@ -138,15 +139,14 @@ imageContainer.addEventListener('wheel', e => {
   displayImageCurrentY = clamp(displayImageCurrentY, rangeMinY, rangeMaxY)
 	updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageScale);
 }, false);
+*/
 
 function updateDisplayImage(x, y, scale) {
   const transform = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(0px) scale(' + scale + ',' + scale + ')';
   displayImage.style.transform = transform;
   displayImage.style.WebkitTransform = transform;
   displayImage.style.msTransform = transform;
-
-  // NOTE we don't update it
-  //updateHud();
+  updateHud();
 }
 
 function updateRange() {
@@ -160,7 +160,6 @@ function updateRange() {
   rangeMinY = 0 - rangeMaxY;
 }
 
-/*
 // no use: display window
 function updateHud() {
   let hudText = `<pre>
@@ -185,21 +184,17 @@ function updateHud() {
 </pre>`;
   hud.innerHTML = hudText;
 }
-*/
 
 const hammertime = new Hammer(imageContainer);
 
 hammertime.get('pinch').set({ enable: true });
+hammertime.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
-//hammertime.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-
-/*
 hammertime.on('pan', ev => {
   displayImageCurrentX = clamp(displayImageX + ev.deltaX, rangeMinX, rangeMaxX);
   displayImageCurrentY = clamp(displayImageY + ev.deltaY, rangeMinY, rangeMaxY);
 	updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageScale);
 });
-*/
 
 hammertime.on('pinch pinchmove', ev => {
   displayImageCurrentScale = clampScale(ev.scale * displayImageScale);
@@ -209,15 +204,7 @@ hammertime.on('pinch pinchmove', ev => {
   updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageCurrentScale);
 });
 
-/*
 hammertime.on('panend pancancel pinchend pinchcancel', () => {
-  displayImageScale = displayImageCurrentScale;
-  displayImageX = displayImageCurrentX;
-  displayImageY = displayImageCurrentY;
-});
-*/
-
-hammertime.on('pinchend pinchcancel', () => {
   displayImageScale = displayImageCurrentScale;
   displayImageX = displayImageCurrentX;
   displayImageY = displayImageCurrentY;

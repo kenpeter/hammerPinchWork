@@ -7,127 +7,72 @@ const imageContainer = document.querySelector('.imageContainer');
 // select the hud has well
 const hud = document.querySelector('#hud');
 
-// from 1 to 4
 let minScale = 1;
 let maxScale = 4;
-
-// img w h
 let imageWidth;
 let imageHeight;
-
-// container w h
 let containerWidth;
 let containerHeight;
-
-// display x y scale
 let displayImageX = 0;
 let displayImageY = 0;
 let displayImageScale = 1;
 
-// global: display default
 let displayDefaultWidth;
 let displayDefaultHeight;
 
-// range x, max, min
 let rangeX = 0;
 let rangeMaxX = 0;
 let rangeMinX = 0;
 
-// range y, max, min
 let rangeY = 0;
 let rangeMaxY = 0;
 let rangeMinY = 0;
 
 let displayImageRangeY = 0;
 
-// display img x y scale
 let displayImageCurrentX = 0;
 let displayImageCurrentY = 0;
 let displayImageCurrentScale = 1;
 
 
-// resize container
 function resizeContainer() {
-  // img container outer width
   containerWidth = imageContainer.offsetWidth;
-  // img container outer height
   containerHeight = imageContainer.offsetHeight;
-
-  // img outer width
-  // img outer height
   if (displayDefaultWidth !== undefined && displayDefaultHeight !== undefined) {
-    // img outer width
     displayDefaultWidth = displayImage.offsetWidth;
-    // img outer height
     displayDefaultHeight = displayImage.offsetHeight;
-
-    // update range
     updateRange();
-
-    // display img curr x
-    // img x, min_x, max_x
     displayImageCurrentX = clamp( displayImageX, rangeMinX, rangeMaxX );
-
-    // display img curr y
-    // img y, min_y, max_y
     displayImageCurrentY = clamp( displayImageY, rangeMinY, rangeMaxY );
-
-    // update display img
     updateDisplayImage(
-      // img x
       displayImageCurrentX,
-      // img y
       displayImageCurrentY,
-      // img scale
       displayImageCurrentScale );
   }
 }
 
-// init, call resize container
 resizeContainer();
 
-// compress
 function clamp(value, min, max) {
   return Math.min(Math.max(min, value), max);
 }
 
-// compress scale
 function clampScale(newScale) {
   return clamp(newScale, minScale, maxScale);
 }
 
-// when resize, resize container
 window.addEventListener('resize', resizeContainer, true);
 
-// cr img
 const displayImage = new Image();
-
-// set url from very topo
 displayImage.src = imageUrl;
-
-// when img load
-displayImage.onload = function() {
-  // get img width
+displayImage.onload = function(){
   imageWidth = displayImage.width;
-  // get img height
   imageHeight = displayImage.height;
-  // img to img container
   imageContainer.appendChild(displayImage);
-
-  // img has listener
-  // mouse down
-  // stop default
-  // no option
   displayImage.addEventListener('mousedown', e => e.preventDefault(), false);
-
-  // outer width
   displayDefaultWidth = displayImage.offsetWidth;
-  // outer height
   displayDefaultHeight = displayImage.offsetHeight;
-
-  // diff of img outer & img container outer
   rangeX = Math.max(0, displayDefaultWidth - containerWidth);
-
   rangeY = Math.max(0, displayDefaultHeight - containerHeight);
 }
 
@@ -144,9 +89,7 @@ function updateDisplayImage(x, y, scale) {
   displayImage.style.transform = transform;
   displayImage.style.WebkitTransform = transform;
   displayImage.style.msTransform = transform;
-
-  // NOTE we don't update it
-  //updateHud();
+  updateHud();
 }
 
 function updateRange() {
@@ -160,8 +103,6 @@ function updateRange() {
   rangeMinY = 0 - rangeMaxY;
 }
 
-/*
-// no use: display window
 function updateHud() {
   let hudText = `<pre>
 <b>Current</b>
@@ -185,21 +126,17 @@ function updateHud() {
 </pre>`;
   hud.innerHTML = hudText;
 }
-*/
 
 const hammertime = new Hammer(imageContainer);
 
 hammertime.get('pinch').set({ enable: true });
+hammertime.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
-//hammertime.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-
-/*
 hammertime.on('pan', ev => {
   displayImageCurrentX = clamp(displayImageX + ev.deltaX, rangeMinX, rangeMaxX);
   displayImageCurrentY = clamp(displayImageY + ev.deltaY, rangeMinY, rangeMaxY);
 	updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageScale);
 });
-*/
 
 hammertime.on('pinch pinchmove', ev => {
   displayImageCurrentScale = clampScale(ev.scale * displayImageScale);
@@ -209,15 +146,7 @@ hammertime.on('pinch pinchmove', ev => {
   updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageCurrentScale);
 });
 
-/*
 hammertime.on('panend pancancel pinchend pinchcancel', () => {
-  displayImageScale = displayImageCurrentScale;
-  displayImageX = displayImageCurrentX;
-  displayImageY = displayImageCurrentY;
-});
-*/
-
-hammertime.on('pinchend pinchcancel', () => {
   displayImageScale = displayImageCurrentScale;
   displayImageX = displayImageCurrentX;
   displayImageY = displayImageCurrentY;
