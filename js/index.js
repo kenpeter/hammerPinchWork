@@ -1,7 +1,7 @@
 'use strict';
 
 // img url
-const imageUrl = 'https://source.unsplash.com/random';
+const imageUrl = 'https://cdn.shopify.com/s/files/1/0131/9514/9369/products/redpixie_1242x.progressive.jpg?v=1539581610';
 // img container
 const imageContainer = document.querySelector('.imageContainer');
 // select the hud has well
@@ -102,7 +102,7 @@ window.addEventListener('resize', resizeContainer, true);
 // cr img
 const displayImage = new Image();
 
-// set url from very topo
+// set url from very top
 displayImage.src = imageUrl;
 
 // when img load
@@ -131,6 +131,7 @@ displayImage.onload = function() {
   rangeY = Math.max(0, displayDefaultHeight - containerHeight);
 }
 
+// img container wheel
 imageContainer.addEventListener('wheel', e => {
   displayImageScale = displayImageCurrentScale = clampScale(displayImageScale + (e.wheelDelta / 800));
   updateRange();
@@ -139,6 +140,7 @@ imageContainer.addEventListener('wheel', e => {
 	updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageScale);
 }, false);
 
+// update display img
 function updateDisplayImage(x, y, scale) {
   const transform = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(0px) scale(' + scale + ',' + scale + ')';
   displayImage.style.transform = transform;
@@ -149,6 +151,7 @@ function updateDisplayImage(x, y, scale) {
   //updateHud();
 }
 
+// update range
 function updateRange() {
   rangeX = Math.max(0, Math.round(displayDefaultWidth * displayImageCurrentScale) - containerWidth);
   rangeY = Math.max(0, Math.round(displayDefaultHeight * displayImageCurrentScale) - containerHeight);
