@@ -235,8 +235,10 @@ hammertime.on('panend pancancel pinchend pinchcancel', () => {
 });
 
 
+/*
 hammertime.on('pinchend pinchcancel', () => {
   displayImageScale = displayImageCurrentScale;
   displayImageX = displayImageCurrentX;
   displayImageY = displayImageCurrentY;
 });
+*/
