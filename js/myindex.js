@@ -1,11 +1,6 @@
 'use strict';
 
-// img tag, with url
-const imageUrl = 'https://cdn.shopify.com/s/files/1/0131/9514/9369/products/redpixie_1242x.progressive.jpg?v=1539581610';
-// img stay in container
 const imageContainer = document.querySelector('.imageContainer');
-// select the hud has well
-const hud = document.querySelector('#hud');
 
 // Global var
 // from 1 to 4
@@ -107,15 +102,20 @@ function clampScale(newScale) {
 // when resize, resize container
 window.addEventListener('resize', resizeContainer, true);
 
-// create new img
-const displayImage = new Image();
 
 
-// the new image has url
-displayImage.src = imageUrl;
+// ---------- display image --------------
+const displayImage = document.querySelector('#theImg');
 
-// image onload, do something
+console.log('--');
+console.log(displayImage);
+
+
 displayImage.onload = function() {
+
+  // test
+  console.log('onload?');
+
   // get img width
   imageWidth = displayImage.width;
   // get img height
@@ -138,7 +138,9 @@ displayImage.onload = function() {
   rangeX = Math.max(0, displayDefaultWidth - containerWidth);
 
   rangeY = Math.max(0, displayDefaultHeight - containerHeight);
-}
+};
+
+
 
 // img container wheel
 imageContainer.addEventListener('wheel', e => {
@@ -146,7 +148,7 @@ imageContainer.addEventListener('wheel', e => {
   updateRange();
   displayImageCurrentX = clamp(displayImageCurrentX, rangeMinX, rangeMaxX)
   displayImageCurrentY = clamp(displayImageCurrentY, rangeMinY, rangeMaxY)
-	updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageScale);
+  updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageScale);
 }, false);
 
 // update display img
@@ -172,32 +174,6 @@ function updateRange() {
   rangeMinY = 0 - rangeMaxY;
 }
 
-/*
-// no use: display window
-function updateHud() {
-  let hudText = `<pre>
-<b>Current</b>
-<b>Scale:</b>     ${displayImageCurrentScale.toFixed(4)}
-<b>X:</b>         ${displayImageCurrentX}
-<b>Y:</b>         ${displayImageCurrentY}
-
-<b>Range</b>
-<b>rangeX:</b>    ${rangeX}
-<b>rangeMinX:</b> ${rangeMinX}
-<b>rangeMaxX:</b> ${rangeMaxX}
-
-<b>rangeY:</b>    ${rangeY}
-<b>rangeMinY:</b> ${rangeMinY}
-<b>rangeMaxY:</b> ${rangeMaxY}
-
-<b>Updated</b>
-<b>Scale:</b>     ${displayImageScale.toFixed(4)}
-<b>X:</b>         ${displayImageX}
-<b>Y:</b>         ${displayImageY}
-</pre>`;
-  hud.innerHTML = hudText;
-}
-*/
 
 const hammertime = new Hammer(imageContainer);
 
@@ -233,7 +209,6 @@ hammertime.on('panend pancancel pinchend pinchcancel', () => {
   displayImageX = displayImageCurrentX;
   displayImageY = displayImageCurrentY;
 });
-
 
 hammertime.on('pinchend pinchcancel', () => {
   displayImageScale = displayImageCurrentScale;
